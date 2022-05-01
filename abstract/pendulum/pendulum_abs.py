@@ -103,6 +103,29 @@ class Agent(object):
         self.actor_target.load_state_dict(self.actor.state_dict())
         self.critic_target.load_state_dict(self.critic.state_dict())
 
+    def reset(self):
+        self.env = env
+        self.gamma = 0.99
+        self.actor_lr = 0.0001
+        self.critic_lr = 0.001
+        self.tau = 0.02
+        self.capacity = 10000
+        self.batch_size = 32
+
+        s_dim = self.env.observation_space.shape[0] * 2
+        a_dim = self.env.action_space.shape[0]
+
+        self.actor = Actor(s_dim, 256, a_dim)
+        self.network = Actor(s_dim, 256, a_dim)
+        self.actor_target = Actor(s_dim, 256, a_dim)
+        self.critic = Critic(s_dim + a_dim, 256, a_dim)
+        self.critic_target = Critic(s_dim + a_dim, 256, a_dim)
+        self.actor_optim = optim.Adam(self.actor.parameters(), lr=self.actor_lr)
+        self.critic_optim = optim.Adam(self.critic.parameters(), lr=self.critic_lr)
+        self.buffer = []
+        self.actor_target.load_state_dict(self.actor.state_dict())
+        self.critic_target.load_state_dict(self.critic.state_dict())
+
     def save(self):  # 保存网络的参数数据
         torch.save(self.actor.state_dict(), pt_file0)
         torch.save(self.critic.state_dict(), pt_file1)

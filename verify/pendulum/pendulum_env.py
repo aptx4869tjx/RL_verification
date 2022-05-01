@@ -47,8 +47,8 @@ class PendulumEnv():
     def get_abstract_state_label(self, abstract_state, cnt):
         state_list = str_to_list(abstract_state)
         if state_list[0] <= 0:
-            if cnt <= 5:
-                print('bad state-----------', state_list)
+            # if cnt <= 5:
+            #     print('bad state-----------', state_list)
             return []
         return ['safe']
 
