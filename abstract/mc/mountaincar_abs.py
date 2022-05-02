@@ -3,6 +3,7 @@
 import copy
 import os
 import random
+import sys
 import time
 from collections import deque, namedtuple
 import gym
@@ -14,6 +15,8 @@ import torch.optim as optim
 from rtree import index
 from scipy.optimize import Bounds
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 # 获取文件所在的当前路径
 from verify.divide_tool import str_to_list, initiate_divide_tool_rtree
 

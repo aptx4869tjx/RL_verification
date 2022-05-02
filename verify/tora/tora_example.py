@@ -1,5 +1,10 @@
 import time
 
+import os
+import sys
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 from abstract.tora.tora_abs import *
 from verify.cegar import cegar, cegar_record
 from verify.divide_tool import initiate_divide_tool_rtree, initiate_divide_tool

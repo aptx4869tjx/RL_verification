@@ -1,4 +1,5 @@
 import os
+import sys
 
 import gym
 import math
@@ -9,6 +10,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 
 # 获取文件所在的当前路径
 from abstract_env.b1 import B1Env

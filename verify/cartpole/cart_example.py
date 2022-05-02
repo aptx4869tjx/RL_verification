@@ -1,8 +1,12 @@
+import os
+import sys
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 from abstract.cartpole.cartpole_abs import *
 from verify.cartpole.cart_env import CartPoleEnv
 from verify.cegar import cegar
 from verify.divide_tool import initiate_divide_tool_rtree
-
 
 file_name = 'cart_abs2'
 print(time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()))
@@ -14,4 +18,3 @@ agent = Agent(divide_tool)
 # train_model(agent)
 cp = CartPoleEnv(divide_tool, agent.model)
 cegar(file_name, agent, divide_tool, train_model, cp, 3)
-

@@ -1,5 +1,7 @@
 import os
 import random
+import sys
+
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
@@ -7,6 +9,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 # 获取文件所在的当前路径
 from abstract_env.Tora import ToraEnv
 from verify.divide_tool import initiate_divide_tool, str_to_list, initiate_divide_tool_rtree

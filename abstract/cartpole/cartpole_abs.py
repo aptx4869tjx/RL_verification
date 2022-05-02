@@ -4,6 +4,7 @@ import bisect
 import copy
 import os
 import random
+import sys
 from collections import deque, namedtuple
 import gym
 import numpy as np
@@ -15,7 +16,8 @@ from rtree import index
 import time
 import pandas as pd
 
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 from verify.divide_tool import DivideTool, str_to_list, initiate_divide_tool_rtree
 
 

@@ -1,5 +1,9 @@
+import os
+import sys
 import time
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(BASE_DIR)
 from abstract.b2.b2_abs import state_space, Agent, train_model, initial_intervals, evaluate
 from verify.Validator import Validator
 
