@@ -17,18 +17,3 @@ b2 = B2_Env(divide_tool, agent.actor)
 cegar(file_name, agent, divide_tool, train_model, b2, 5)
 evaluate(agent)
 
-
-# initial_intervals = [0.005, 0.005]
-# divide_tool = initiate_divide_tool(state_space, initial_intervals)
-# agent = Agent(divide_tool)
-# # agent.model=model
-# # agent.load()
-# # agent.reset()
-# train_model(agent)
-#
-# b2 = B2_Env(divide_tool, agent.actor)
-# v = Validator(b2, agent.actor)
-# k = v.create_kripke_ctl()
-# res2, violated_states = v.ctl_model_check(k)
-# print(res2, len(violated_states))
-# print(time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()))
