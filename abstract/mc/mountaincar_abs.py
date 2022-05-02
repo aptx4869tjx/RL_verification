@@ -353,8 +353,8 @@ def train_model(agent):
 if __name__ == "__main__":
     divide_tool = initiate_divide_tool_rtree(state_space, initial_intervals, [0, 1], 'mou_rtree')
     agent = Agent(divide_tool)
+    train_model(agent)
     agent.load()
-    # train_model(agent)
     # min_reward = agent.evaluate(100)
     min_reward = evaluate(agent, 100)
 

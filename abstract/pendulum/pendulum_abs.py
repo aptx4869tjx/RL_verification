@@ -266,4 +266,5 @@ if __name__ == "__main__":
     agent = Agent(divide_tool)
     # agent.load()
     train_model(agent)
+    agent.load()
     evaluate(agent)

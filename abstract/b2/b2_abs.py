@@ -322,6 +322,6 @@ def train_model(agent):
 if __name__ == "__main__":
     divide_tool = initiate_divide_tool_rtree(state_space, initial_intervals, [0, 1], 'b2+abstraction')
     agent = Agent(divide_tool)
+    train_model(agent)
     agent.load()
-    # train_model(agent)
     evaluate(agent)

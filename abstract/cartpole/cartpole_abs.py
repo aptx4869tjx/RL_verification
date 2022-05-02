@@ -20,7 +20,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 sys.path.append(BASE_DIR)
 from verify.divide_tool import DivideTool, str_to_list, initiate_divide_tool_rtree
 
-
 rindex = '0'
 
 # 获取文件所在的当前路径
@@ -263,7 +262,7 @@ def train(agent, episode):
     return step_size
 
 
-def evaluate(agent, episo):
+def evaluate(agent, episo=100):
     min_reward = EVALUTE_MAX_STEP
     min_step = EVALUTE_MAX_STEP
 
@@ -324,12 +323,11 @@ def train_model(agent):
     #     break
 
 
-
-
-
 if __name__ == "__main__":
     divide_tool = initiate_divide_tool_rtree(state_space, initial_intervals, [0, 2], 'cart_abs1')
 
     agent = Agent(divide_tool)
     # agent.load()
     train_model(agent)
+    agent.load()
+    evaluate(agent)

@@ -339,5 +339,6 @@ if __name__ == "__main__":
     agent = Agent(divide_tool)
     # agent.load()
     train_model(agent)
+    agent.load()
     res_list = evaluate(agent)
     print(len(res_list), 'avg: ', np.mean(res_list))
