@@ -13,16 +13,9 @@ Our project is organized as below:
 ## Installation
 
 1. unzip
-2. `cd Trainify`
-
-###  Build the docker image
-
-3. `docker build -t trainify .`
-
-### Create the docker container
-
-4. `docker run -it --name trainify-container trainify /bin/bash`
-5. Finally if you exit the container and would like to resume using it, you can do as follows: `docker start -i trainify`.
+2. `docker load -i trainify.tar`
+3. `docker run -it --name trainify-container trainify /bin/bash`
+4. Finally if you exit the container and would like to resume using it, you can do as follows: `docker start -i trainify-container`.
 
 ------------
 
@@ -34,7 +27,7 @@ But the verification program works in a single thread, so it does not require to
 ------------
 
 ## Reproduce `By Trainify` column in Table 2
-1. Enter /home/RL_verification/  
+1. (In container) Enter /home/RL_verification/  
 run `cd /home/RL_verification/`
 2. run either: 
 ```
@@ -93,5 +86,4 @@ For each task, the running time is shown below:
 - pendulum: 150 seconds
 - mountaincar: 300 seconds
 - tora: 100 seconds
-
 
