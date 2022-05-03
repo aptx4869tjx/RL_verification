@@ -54,7 +54,7 @@ class Validator:
                 self.abstract_initial_states.append(s)
         else:
             self.abstract_initial_states.append(self.get_abstract_state(self.initial_states))
-        print('初始状态数量:', len(self.abstract_initial_states))
+        print('number of initial states:', len(self.abstract_initial_states))
 
     def create_kripke_ctl(self):
         label_dict = {}
@@ -153,11 +153,11 @@ class Validator:
                 sat += 1
 
         if flag:
-            print("该系统满足此CTL表达式:", self.formula, sat, unsat)
+            print("CTL formula satisfied:", self.formula, sat, unsat)
             return True, qualified_states
 
         else:
-            print("该系统不满足该CTL表达式", self.formula, sat, unsat)
+            print("CTL formula not satisfied:", self.formula, sat, unsat)
             if unsat < s_n:
                 return True, qualified_states
             else:

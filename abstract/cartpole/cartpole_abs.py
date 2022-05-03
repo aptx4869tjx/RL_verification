@@ -300,7 +300,7 @@ def train_model(agent):
         reward_list.append(reward)
         if episode % 50 == 49:  # 每训练XXX次，保存一下模型,并打印一下
             agent.save()
-            print('训练回合数目=', episode + 1)
+            print('episode=', episode + 1)
             m = np.mean(reward_list[-50:])
             print('avg reward:', m)
             mean_reward_list.append(m)
@@ -309,7 +309,7 @@ def train_model(agent):
                 min = evaluate(agent, 10)
                 if min >= EVALUTE_MAX_STEP:
                     agent.save()
-                    print('达到训练终止条件：训练回合数目=', episode + 1)
+                    print('training finished, episode=', episode + 1)
                     return np.array(reward_list), np.array(mean_reward_list, dtype=np.float32)
     return np.array(reward_list), np.array(mean_reward_list, dtype=np.float32)
     # print('达到evaluate的条件：mean reward:', np.mean(reward_list[-100:]))

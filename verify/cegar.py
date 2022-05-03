@@ -26,10 +26,11 @@ def cegar(file_name, agent, divide_tool, train_model, verify_env, max_iteration)
     if k is None:
         violated_states = list(divide_tool.rtree.intersection(divide_tool.rtree.bounds, objects='raw'))
         res2 = True
-        print('反例数量：', len(violated_states))
+        print('number of counterexamples：', len(violated_states))
     else:
         # v.formula = 'not(A(G(safe)))'
         res2, violated_states = v.ctl_model_check(k)
+        print('number of counterexamples：', len(violated_states))
     t2 = time.time()
     print('train time:', tr - t0, 'construct kripke structure:', t1 - tr, 'model checking:', t2 - t1)
     print(time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()))
@@ -42,7 +43,7 @@ def cegar(file_name, agent, divide_tool, train_model, verify_env, max_iteration)
         t0 = time.time()
         divide_tool.rtree = index.Index(file_name, divide_tool.rtree_refinement(violated_states, start_id),
                                         properties=p)
-        print('精化后状态数量:', divide_tool.rtree.get_size())
+        print('number of states after refinement:', divide_tool.rtree.get_size())
         trr = time.time()
         start_id += divide_tool.rtree.get_size()
         agent.divide_tool = divide_tool
@@ -62,10 +63,11 @@ def cegar(file_name, agent, divide_tool, train_model, verify_env, max_iteration)
         if k is None:
             violated_states = list(divide_tool.rtree.intersection(divide_tool.rtree.bounds, objects='raw'))
             res2 = True
-            print('反例数量：', len(violated_states))
+            print('number of counterexamples：', len(violated_states))
         else:
             # v.formula = 'not(A(G(safe)))'
             res2, violated_states = v.ctl_model_check(k)
+            print('number of counterexamples：', len(violated_states))
         print('iteration :', iteration_time, res2, len(violated_states))
         t2 = time.time()
         print('refine:', trr - t0, 'train:', tr - trr, 'construct kripke structure:', t1 - tr, 'model checking:',
@@ -88,10 +90,11 @@ def cegar(file_name, agent, divide_tool, train_model, verify_env, max_iteration)
         if k is None:
             violated_states = list(divide_tool.rtree.intersection(divide_tool.rtree.bounds, objects='raw'))
             res2 = True
-            print('反例数量：', len(violated_states))
+            print('number of counterexamples：', len(violated_states))
         else:
             # v.formula = 'not(A(G(safe)))'
             res2, violated_states = v.ctl_model_check(k)
+            print('number of counterexamples：', len(violated_states))
         t2 = time.time()
         print('train:', tr - t0, 'construct kripke structure:', t1 - tr, 'model checking:', t2 - t1)
         print(time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()))
@@ -120,7 +123,7 @@ def cegar_record(file_name, agent, divide_tool, train_model, verify_env, max_ite
     if k is None:
         violated_states = list(divide_tool.rtree.intersection(divide_tool.rtree.bounds, objects='raw'))
         res2 = True
-        print('反例数量：', len(violated_states))
+        print('number of counterexamples：', len(violated_states))
     else:
         # v.formula = 'not(A(G(safe)))'
         res2, violated_states = v.ctl_model_check(k)
@@ -161,7 +164,7 @@ def cegar_record(file_name, agent, divide_tool, train_model, verify_env, max_ite
         if k is None:
             violated_states = list(divide_tool.rtree.intersection(divide_tool.rtree.bounds, objects='raw'))
             res2 = True
-            print('反例数量：', len(violated_states))
+            print('number of counterexamples：', len(violated_states))
         else:
             # v.formula = 'not(A(G(safe)))'
             res2, violated_states = v.ctl_model_check(k)
@@ -192,7 +195,7 @@ def cegar_record(file_name, agent, divide_tool, train_model, verify_env, max_ite
         if k is None:
             violated_states = list(divide_tool.rtree.intersection(divide_tool.rtree.bounds, objects='raw'))
             res2 = True
-            print('反例数量：', len(violated_states))
+            print('number of counterexamples：', len(violated_states))
         else:
             # v.formula = 'not(A(G(safe)))'
             res2, violated_states = v.ctl_model_check(k)

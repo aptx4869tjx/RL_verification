@@ -43,7 +43,7 @@ def initiate_divide_tool_rtree(state_space, initial_intervals, key_dim, file_nam
     rtree = index.Index(file_name, properties=p)
     if rtree.get_size() == 0:
         rtree = index.Index(file_name, divide(key_state_space, key_initial_intevals), properties=p)
-    print('rtree中状态数量', rtree.get_size())
+    print('number of states in rtree', rtree.get_size())
     dp = DivideTool(divide_point)
     dp.key_dim = key_dim
     dp.rtree = rtree
@@ -253,7 +253,7 @@ class DivideTool:
         s1, s2 = self.part_state(bound)
         tt = self.intersection(bound)
         if len(tt) == 0:
-            print('bug')
+            print('no corresponding abstract state')
         return tt[0]
         # tmp = []
         # # 点查询
@@ -287,7 +287,7 @@ class DivideTool:
     def rtree_refinement(self, violate_states, start_id):
         print(self.rtree.bounds)
         all_states = list(self.rtree.intersection(self.rtree.bounds, objects=True))
-        print('所有状态数量', len(all_states))
+        print('number of all states in rtree', len(all_states))
         key_dim = len(self.key_dim)
         cnt1 = 0
         cnt2 = 0
