@@ -53,8 +53,24 @@ For each task, the total time comsumption, the sum of train time, verification t
 - mountaincar: 50 minutes
 - tora: 30 minutes
 
+When these scripts are running, some related information will be printed out:
++ train: denotes the time of training in current iteration.
++ refine: denotes the time of refinement in current iteration.
++ construct kripke structure: denotes the time of constructing kripke structure in current iteration.
++ model checking: denotes the time of model checking in current iteration.
 
-Notice that, in our implementation, we wrote a fixed network structure and the property to be verified.   
++ number of counterexamples: denotes the number of counterexamples returned from model checking.
++ number of all states in rtree: denotes the number of abstract states in rtree.
++ number of states after refinement: denotes the number of abstract states after refinement.
+
+
+Notice that, in our implementation, we wrote a fixed network structure and the property to be verified.
+In addition, if exception is thrown during running and "no corresponding abstract state" is printed
+out, the solution is deleting the .dat and .idx files by executing following commands and rerunning.
+```
+rm *.dat
+rm *.idx
+```
 
 ------------
 
