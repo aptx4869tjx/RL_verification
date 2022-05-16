@@ -58,9 +58,14 @@ class MountainCarTest:
 
     def get_abstract_state_label(self, abstract_state, cnt):
         abstract_state = self.string_to_list(abstract_state)
-        if abstract_state[0] >= 0.5:
-            return ['success']
-        return []
+        res = []
+        if abstract_state[0] >= 0.45:
+            res.append('success')
+        if 0.15 < abstract_state[0] < 0.25:
+            res.append('left')
+        if abstract_state[2] > 0.02:
+            res.append('right')
+        return res
 
     def get_abstract_state_hash(self, abstract_state):
         return str(abstract_state)

@@ -1,32 +1,29 @@
 import os
+import random
 import sys
 
-import gym
-import math
-import random
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(BASE_DIR)
-
 # 获取文件所在的当前路径
-from abstract_env.b1 import B1Env
-from abstract_env.b2 import B2Env
+from abstract_env.Tora import ToraEnv
 from verify.divide_tool import initiate_divide_tool, str_to_list, initiate_divide_tool_rtree
 
 script_path = os.path.split(os.path.realpath(__file__))[0]
-pt_file0 = os.path.join(script_path, "b2_abs-actor.pt")
-pt_file1 = os.path.join(script_path, "b2_abs-critic.pt")
-pt_file2 = os.path.join(script_path, "b2_abs-actor-target.pt")
-pt_file3 = os.path.join(script_path, "b2_abs-critic-target.pt")
-hide_size = 20
-state_space = [[-2.5, -2.5], [2.5, 2.5]]
-initial_intervals = [0.1, 0.1]
-env = B2Env()
+pt_file0 = os.path.join(script_path, "tora_abs-actor2.pt")
+pt_file1 = os.path.join(script_path, "tora_abs-critic2.pt")
+pt_file2 = os.path.join(script_path, "tora_abs-actor-target2.pt")
+pt_file3 = os.path.join(script_path, "tora_abs-critic-target2.pt")
+hide_size = 200
+state_space = [[-10, -10, -10, -10], [10, 10, 10, 10]]
+initial_intervals = [0.01, 0.1, 0.01, 0.01]
+env = ToraEnv()
 env.reset()
 
 
@@ -36,14 +33,17 @@ class Actor(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(Actor, self).__init__()
         self.linear1 = nn.Linear(input_size, hidden_size)
-        self.linear1.weight.data.normal_(0, 0.1)
+        self.linear1.weight.data.normal_(0, 1)
         self.linear1.bias.data.zero_()
         self.linear2 = nn.Linear(hidden_size, hidden_size)
-        self.linear2.weight.data.normal_(0, 0.1)
+        self.linear2.weight.data.normal_(0, 1)
         self.linear2.bias.data.zero_()
-        self.linear3 = nn.Linear(hidden_size, output_size)
-        self.linear3.weight.data.normal_(0, 0.1)
+        self.linear3 = nn.Linear(hidden_size, hidden_size)
+        self.linear3.weight.data.normal_(0, 1)
         self.linear3.bias.data.zero_()
+        self.linear4 = nn.Linear(hidden_size, output_size)
+        self.linear4.weight.data.normal_(0, 1)
+        self.linear4.bias.data.zero_()
 
     def forward(self, s):
         # x = F.relu(self.linear1(s))
@@ -53,10 +53,7 @@ class Actor(nn.Module):
         x = torch.tanh(self.linear1(s))
         x = torch.tanh(self.linear2(x))
         x = torch.tanh(self.linear3(x))
-
-        # x = torch.sigmoid(self.linear1(s))
-        # x = torch.sigmoid(self.linear2(x))
-        # x = torch.tanh(self.linear3(x))
+        x = torch.tanh(self.linear4(x))
 
         return x
 
@@ -92,7 +89,7 @@ class Agent(object):
     def __init__(self, divide_tool):
         self.env = env
         self.gamma = 0.99
-        self.actor_lr = 0.0001
+        self.actor_lr = 0.001
         self.critic_lr = 0.001
         self.tau = 0.02
         self.capacity = 10000
@@ -114,7 +111,7 @@ class Agent(object):
 
         self.actor_target.load_state_dict(self.actor.state_dict())
         self.critic_target.load_state_dict(self.critic.state_dict())
-        self.noisy = [0, 0]
+        self.noisy = [0, 0, 0, 0]
 
     def reset(self):
         self.env = env
@@ -139,7 +136,7 @@ class Agent(object):
 
         self.actor_target.load_state_dict(self.actor.state_dict())
         self.critic_target.load_state_dict(self.critic.state_dict())
-        self.noisy = [0, 0]
+        self.noisy = [0, 0, 0, 0]
 
     def save(self):  # 保存网络的参数数据
         torch.save(self.actor.state_dict(), pt_file0)
@@ -263,20 +260,16 @@ def evaluate(agent):
     for l in range(100):
         reward = 0
         s0 = env.reset()
-        reach = False
-        for step in range(10000):
+        for step in range(1000):
             # env.render()
             a0 = agent.act(s0)
             s1, r1, done, _ = env.step(a0)
             if done:
-                print('reach goal', s1, step)
-                reach = True
                 break
             reward += r1
             s0 = s1
-        if not reach:
-            print('Not reach goal!!!--------------------------------')
         reward_list.append(reward)
+        print(reward)
     print('avg reward: ', np.mean(reward_list))
     return min_reward
 
@@ -285,12 +278,12 @@ def train_model(agent):
     reward_list = []
     for j in range(10):
         agent.reset()
-        for episode in range(300):
+        for episode in range(3000):
             s0 = env.reset()
             episode_reward = 0
             ab_s = agent.divide_tool.get_abstract_state(s0)
             step_size = 0
-            for step in range(150):
+            for step in range(100):
                 # env.render()
                 a0 = agent.act(s0)
                 s1, r1, done, _ = env.step(a0)
@@ -302,15 +295,16 @@ def train_model(agent):
                 episode_reward += r1
                 s0 = s1
                 ab_s = next_abs
-                if step % 4 == 0:
+                if step % 10 == 9:
                     agent.learn()
                 if done:
                     break
-            if episode % 5 == 4:
+            if episode % 10 == 9:
                 agent.save()
             reward_list.append(episode_reward)
-            print(episode, ': ', episode_reward, step_size)
-            if episode >= 50 and np.min(reward_list[-4:]) >= -40:
+            if episode % 50 == 49:
+                print(episode, ': ', np.mean(reward_list[-50:]), step_size)
+            if episode >= 500 and np.min(reward_list[-5:]) >= 85:
                 #     min_reward = evaluate(agent)
                 #     if min_reward > -30:
                 agent.save()
@@ -320,8 +314,9 @@ def train_model(agent):
 
 
 if __name__ == "__main__":
-    divide_tool = initiate_divide_tool_rtree(state_space, initial_intervals, [0, 1], 'b2+abstraction')
+    divide_tool = initiate_divide_tool_rtree(state_space, initial_intervals, [0, 1], 'tora+abstraction')
     agent = Agent(divide_tool)
+    # agent.load()
     train_model(agent)
     agent.load()
     evaluate(agent)

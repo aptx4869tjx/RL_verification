@@ -16,10 +16,10 @@ from abstract_env.Tora import ToraEnv
 from verify.divide_tool import initiate_divide_tool, str_to_list, initiate_divide_tool_rtree
 
 script_path = os.path.split(os.path.realpath(__file__))[0]
-pt_file0 = os.path.join(script_path, "tora_abs-actor2.pt")
-pt_file1 = os.path.join(script_path, "tora_abs-critic2.pt")
-pt_file2 = os.path.join(script_path, "tora_abs-actor-target2.pt")
-pt_file3 = os.path.join(script_path, "tora_abs-critic-target2.pt")
+pt_file0 = os.path.join(script_path, "tora_abs-actor.pt")
+pt_file1 = os.path.join(script_path, "tora_abs-critic.pt")
+pt_file2 = os.path.join(script_path, "tora_abs-actor-target.pt")
+pt_file3 = os.path.join(script_path, "tora_abs-critic-target.pt")
 hide_size = 100
 state_space = [[-10, -10, -10, -10], [10, 10, 10, 10]]
 initial_intervals = [0.01, 0.1, 0.01, 0.01]

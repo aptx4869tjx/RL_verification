@@ -18,8 +18,8 @@ class B2_Env():
         self.limited_count = 500000
         self.limited_depth = 800
         self.atomic_propositions = ['goal', 'safe']
-        self.formula = 'not(A(safe U goal) or A(G(safe)))'
-        # self.formula= 'not(A(F(goal)))'
+        # self.formula = 'not(A(safe U goal) or A(G(safe)))'
+        self.formula= 'not(A(F(goal)))'
         self.th = 1.0
 
         self.action = 0.0

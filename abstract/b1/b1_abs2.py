@@ -10,23 +10,24 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(BASE_DIR)
-
 # 获取文件所在的当前路径
 from abstract_env.b1 import B1Env
-from abstract_env.b2 import B2Env
 from verify.divide_tool import initiate_divide_tool, str_to_list, initiate_divide_tool_rtree
 
 script_path = os.path.split(os.path.realpath(__file__))[0]
-pt_file0 = os.path.join(script_path, "b2_abs-actor.pt")
-pt_file1 = os.path.join(script_path, "b2_abs-critic.pt")
-pt_file2 = os.path.join(script_path, "b2_abs-actor-target.pt")
-pt_file3 = os.path.join(script_path, "b2_abs-critic-target.pt")
-hide_size = 20
+pt_file0 = os.path.join(script_path, "b1_abs-actor2.pt")
+pt_file1 = os.path.join(script_path, "b1_abs-critic2.pt")
+pt_file2 = os.path.join(script_path, "b1_abs-actor-target2.pt")
+pt_file3 = os.path.join(script_path, "b1_abs-critic-target2.pt")
+
+hiden_size = 100
+
 state_space = [[-2.5, -2.5], [2.5, 2.5]]
-initial_intervals = [0.1, 0.1]
-env = B2Env()
+initial_intervals = [0.01, 0.01]
+env = B1Env()
 env.reset()
 
 
@@ -36,20 +37,19 @@ class Actor(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(Actor, self).__init__()
         self.linear1 = nn.Linear(input_size, hidden_size)
-        self.linear1.weight.data.normal_(0, 0.1)
+        self.linear1.weight.data.normal_(0, 1)
         self.linear1.bias.data.zero_()
         self.linear2 = nn.Linear(hidden_size, hidden_size)
-        self.linear2.weight.data.normal_(0, 0.1)
+        self.linear2.weight.data.normal_(0, 1)
         self.linear2.bias.data.zero_()
         self.linear3 = nn.Linear(hidden_size, output_size)
-        self.linear3.weight.data.normal_(0, 0.1)
+        self.linear3.weight.data.normal_(0, 1)
         self.linear3.bias.data.zero_()
 
     def forward(self, s):
         # x = F.relu(self.linear1(s))
         # x = F.relu(self.linear2(x))
         # x = torch.tanh(self.linear3(x))
-
         x = torch.tanh(self.linear1(s))
         x = torch.tanh(self.linear2(x))
         x = torch.tanh(self.linear3(x))
@@ -97,12 +97,13 @@ class Agent(object):
         self.tau = 0.02
         self.capacity = 10000
         self.batch_size = 32
+        self.e_greed = 0.5
 
         s_dim = self.env.observation_space.shape[0] * 2
         a_dim = self.env.action_space.shape[0]
 
         self.divide_tool = divide_tool
-
+        hide_size = hiden_size
         self.actor = Actor(s_dim, hide_size, a_dim)
         self.network = Actor(s_dim, hide_size, a_dim)
         self.actor_target = Actor(s_dim, hide_size, a_dim)
@@ -114,7 +115,11 @@ class Agent(object):
 
         self.actor_target.load_state_dict(self.actor.state_dict())
         self.critic_target.load_state_dict(self.critic.state_dict())
-        self.noisy = [0, 0]
+
+        self.noisy = [0.0005, 0.0005]
+
+    def update_egreed(self):  # 更新贪心参数e,该函数有问题？？？？
+        self.e_greed = max(0.01, self.e_greed - 0.001)
 
     def reset(self):
         self.env = env
@@ -124,10 +129,11 @@ class Agent(object):
         self.tau = 0.02
         self.capacity = 10000
         self.batch_size = 32
-
+        self.e_greed = 0.5
         s_dim = self.env.observation_space.shape[0] * 2
         a_dim = self.env.action_space.shape[0]
 
+        hide_size = hiden_size
         self.actor = Actor(s_dim, hide_size, a_dim)
         self.network = Actor(s_dim, hide_size, a_dim)
         self.actor_target = Actor(s_dim, hide_size, a_dim)
@@ -139,7 +145,7 @@ class Agent(object):
 
         self.actor_target.load_state_dict(self.actor.state_dict())
         self.critic_target.load_state_dict(self.critic.state_dict())
-        self.noisy = [0, 0]
+        self.noisy = [0.0005, 0.0005]
 
     def save(self):  # 保存网络的参数数据
         torch.save(self.actor.state_dict(), pt_file0)
@@ -177,7 +183,7 @@ class Agent(object):
 
     def update_noisy(self):
         # noisy = [0.005, 0.01, 0.0005, 0.01]
-        step_length = [0.002, 0.002]
+        step_length = [0.0005, 0.0005]
         for i in range(len(step_length)):
             self.noisy[i] += step_length[i]
 
@@ -249,7 +255,6 @@ class Agent(object):
         soft_update(self.actor_target, self.actor, self.tau)
 
 
-# env = gym.make('Pendulum-v0')
 def clip(state):
     state_space1 = [[-2.49999, -2.49999], [2.49999, 2.49999]]
     state[0] = np.clip(state[0], state_space1[0][0], state_space1[1][0])
@@ -259,39 +264,49 @@ def clip(state):
 
 def evaluate(agent):
     min_reward = 0
+    crash = False
     reward_list = []
-    for l in range(100):
+    for l in range(1000):
         reward = 0
         s0 = env.reset()
         reach = False
+
         for step in range(10000):
             # env.render()
             a0 = agent.act(s0)
             s1, r1, done, _ = env.step(a0)
             if done:
-                print('reach goal', s1, step)
+                print(l, 'reach goal', s1, step, end='----')
                 reach = True
                 break
             reward += r1
             s0 = s1
+        print(reward)
+        reward_list.append(reward)
+        if reward <= -600:
+            crash = True
         if not reach:
             print('Not reach goal!!!--------------------------------')
-        reward_list.append(reward)
+    print('crash: ', crash)
     print('avg reward: ', np.mean(reward_list))
-    return min_reward
+    return np.array(reward_list)
 
 
 def train_model(agent):
     reward_list = []
-    for j in range(10):
+    for j in range(20):
         agent.reset()
         for episode in range(300):
+            agent.update_egreed()
             s0 = env.reset()
             episode_reward = 0
             ab_s = agent.divide_tool.get_abstract_state(s0)
             step_size = 0
             for step in range(150):
                 # env.render()
+                # if np.random.rand() < agent.e_greed:
+                #     a0 = [(np.random.rand() - 0.5) * 2]
+                # else:
                 a0 = agent.act(s0)
                 s1, r1, done, _ = env.step(a0)
                 step_size += 1
@@ -310,7 +325,7 @@ def train_model(agent):
                 agent.save()
             reward_list.append(episode_reward)
             print(episode, ': ', episode_reward, step_size)
-            if episode >= 50 and np.min(reward_list[-4:]) >= -40:
+            if episode >= 100 and np.min(reward_list[-4:]) >= -125:
                 #     min_reward = evaluate(agent)
                 #     if min_reward > -30:
                 agent.save()
@@ -320,8 +335,10 @@ def train_model(agent):
 
 
 if __name__ == "__main__":
-    divide_tool = initiate_divide_tool_rtree(state_space, initial_intervals, [0, 1], 'b2+abstraction')
+    divide_tool = initiate_divide_tool_rtree(state_space, initial_intervals, [0, 1], 'b1+abstraction')
     agent = Agent(divide_tool)
+    # agent.load()
     train_model(agent)
     agent.load()
-    evaluate(agent)
+    res_list = evaluate(agent)
+    print(len(res_list), 'avg: ', np.mean(res_list))

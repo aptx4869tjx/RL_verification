@@ -315,7 +315,7 @@ def train_model(agent):
     # print('达到evaluate的条件：mean reward:', np.mean(reward_list[-100:]))
     # print('start evaluate:')
     # min_reward = evaluate(agent, 100)
-    # print('evaluate result min_reward:', min_reward)
+    # print('evaluate results min_reward:', min_reward)
     # # 每次测试100个轨迹，要求均大于495，否则继续训练
     # if min_reward > EVALUTE_MAX_STEP-1:
     #     print('finish training...episode:', episode + 1, "   min_reward:", min_reward)

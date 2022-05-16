@@ -19,11 +19,11 @@ from abstract_env.b2 import B2Env
 from verify.divide_tool import initiate_divide_tool, str_to_list, initiate_divide_tool_rtree
 
 script_path = os.path.split(os.path.realpath(__file__))[0]
-pt_file0 = os.path.join(script_path, "b2_abs-actor.pt")
-pt_file1 = os.path.join(script_path, "b2_abs-critic.pt")
-pt_file2 = os.path.join(script_path, "b2_abs-actor-target.pt")
-pt_file3 = os.path.join(script_path, "b2_abs-critic-target.pt")
-hide_size = 20
+pt_file0 = os.path.join(script_path, "b2_abs-actor2.pt")
+pt_file1 = os.path.join(script_path, "b2_abs-critic2.pt")
+pt_file2 = os.path.join(script_path, "b2_abs-actor-target2.pt")
+pt_file3 = os.path.join(script_path, "b2_abs-critic-target2.pt")
+hide_size = 100
 state_space = [[-2.5, -2.5], [2.5, 2.5]]
 initial_intervals = [0.1, 0.1]
 env = B2Env()

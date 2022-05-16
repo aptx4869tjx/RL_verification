@@ -24,7 +24,7 @@ script_path = os.path.split(os.path.realpath(__file__))[0]
 # 判断是否使用double DQN
 USE_DBQN = False
 # 生成需要保存的文件名称以及路径
-pt_file = os.path.join(script_path, "mountaincar-dqn.pt")
+pt_file = os.path.join(script_path, "mountaincar-dqn2.pt")
 
 # 创建测试环境testbed
 env = gym.make("MountainCar-v0")
@@ -34,7 +34,7 @@ Transition = namedtuple(
 )
 OBS_N = 4  # 整型，状态空间维数
 ACT_N = env.action_space.n  # 整型，动作空间个数
-HIDDEN_N = 32  # 隐藏层节点数目
+HIDDEN_N = 200  # 隐藏层节点数目
 MEMORY_CAPACITY = 10000  # 经验回放盒大小
 WARMUP_SIZE = 256  # 经验回放盒大于该数目，才会开始采样学习，否则不采样
 BATCH_SIZE = 128  # 每次采样数目
