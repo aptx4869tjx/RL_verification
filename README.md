@@ -31,19 +31,33 @@ But the verification program works in a single thread, so it does not require to
 run `cd /home/RL_verification/`
 2. run either: 
 ```
-python verify/b1/b1_example.py
-python verify/b2/b2_example.py
+python abstract/b1/b1_Tanh_2_20_p5.py
+python abstract/b1/b1_Tanh_2_20_p6.py
+python abstract/b1/b1_Tanh_2_100_p5.py
+python abstract/b1/b1_Tanh_2_100_p6.py
+
+python abstract/b2/b2_Tanh_2_20_p7.py
+python abstract/b2/b2_Tanh_2_20_p8.py
+python abstract/b2/b2_Tanh_2_100_p7.py
+python abstract/b2/b2_Tanh_2_100_p8.py
+
 python verify/cartpole/cart_example.py
 python verify/pendulum/pendulum_example.py
-python verify/mountaincar/mountaincar_example.py
-python verify/tora/tora_example.py
+
+python verify/cartpole/MC_sig_2_16_p1.py
+python verify/cartpole/MC_sig_2_16_p2.py
+python verify/cartpole/MC_sig_2_200_p1.py
+python verify/cartpole/MC_sig_2_200_p2.py
+
+python verify/tora/tora_Tanh_3_100_p9.py
+python verify/tora/tora_Tanh_3_200_p9.py
 ```
 For each task, the total time comsumption, the sum of train time, verification time and refine time in all iteration rounds, is shown below. Table 2 only shows the train time and verification time in an iteration.  In addition, the number of iterations also has an impact on the running time. Since the time spent on verification is highly related to the trained network, the total running time may fluctuate greatly, especially in cartpole task.
 - b1: 6 minutes
-- b2: 3 minutes
+- b2: 1 minutes
 - cartpole: 8 hours
 - pendulum: 5 minutes
-- mountaincar: 50 minutes
+- mountaincar: 90 minutes
 - tora: 30 minutes
 
 When these scripts are running, some related information will be printed out:
