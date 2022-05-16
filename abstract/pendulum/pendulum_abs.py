@@ -93,11 +93,11 @@ class Agent(object):
         a_dim = self.env.action_space.shape[0]
 
         self.divide_tool = divide_tool
-        self.actor = Actor(s_dim, 256, a_dim)
-        self.network = Actor(s_dim, 256, a_dim)
-        self.actor_target = Actor(s_dim, 256, a_dim)
-        self.critic = Critic(s_dim + a_dim, 256, a_dim)
-        self.critic_target = Critic(s_dim + a_dim, 256, a_dim)
+        self.actor = Actor(s_dim, 128, a_dim)
+        self.network = Actor(s_dim, 128, a_dim)
+        self.actor_target = Actor(s_dim, 128, a_dim)
+        self.critic = Critic(s_dim + a_dim, 128, a_dim)
+        self.critic_target = Critic(s_dim + a_dim, 128, a_dim)
         self.actor_optim = optim.Adam(self.actor.parameters(), lr=self.actor_lr)
         self.critic_optim = optim.Adam(self.critic.parameters(), lr=self.critic_lr)
         self.buffer = []

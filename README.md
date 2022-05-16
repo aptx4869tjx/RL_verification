@@ -41,8 +41,9 @@ python abstract/b2/b2_Tanh_2_20_p8.py
 python abstract/b2/b2_Tanh_2_100_p7.py
 python abstract/b2/b2_Tanh_2_100_p8.py
 
-python verify/cartpole/cart_example.py
-python verify/pendulum/pendulum_example.py
+python verify/cartpole/CP_Relu_3_64_p4.py
+
+python verify/pendulum/pendulum_Relu_3_128_p3.py
 
 python verify/cartpole/MC_sig_2_16_p1.py
 python verify/cartpole/MC_sig_2_16_p2.py
