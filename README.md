@@ -12,7 +12,7 @@ Our project is organized as below:
 ------------
 ## Installation
 
-1. unzip
+1. The docker image can be downloaded in https://figshare.com/s/60171a8316441d3ad4f6
 2. `docker load -i trainify.tar`
 3. `docker run -it --name trainify-container trainify /bin/bash`
 4. Finally if you exit the container and would like to resume using it, you can do as follows: `docker start -i trainify-container`.
